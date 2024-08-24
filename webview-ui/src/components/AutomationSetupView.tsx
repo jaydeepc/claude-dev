@@ -1,9 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { VSCodeButton, VSCodeDropdown, VSCodeOption } from '@vscode/webview-ui-toolkit/react';
 import { vscode } from '../utils/vscode';
-
-// Import the logo
-import logo from '../assets/logo.png';
 
 interface AutomationSetupViewProps {
   onStartAutomation: () => void;
@@ -15,6 +12,10 @@ const AutomationSetupView: React.FC<AutomationSetupViewProps> = ({ onStartAutoma
   const [endpoints, setEndpoints] = useState<string[]>([]);
   const [selectedEndpoints, setSelectedEndpoints] = useState<string[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<string>('');
+
+  useEffect(() => {
+    console.log('AutomationSetupView mounted');
+  }, []);
 
   const handleAutomationTypeChange = (event: Event | React.FormEvent<HTMLElement>) => {
     const target = event.target as HTMLSelectElement;
@@ -76,12 +77,8 @@ const AutomationSetupView: React.FC<AutomationSetupViewProps> = ({ onStartAutoma
       borderRadius: '8px',
       boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
     }}>
-      <div style={{ display: 'flex', alignItems: 'center', marginBottom: '30px' }}>
-        <img src={logo} alt="AI-enabled Test Automation" style={{
-          width: '60px',
-          height: '60px',
-          marginRight: '20px'
-        }} />
+        
+      <div style={{ marginBottom: '30px' }}>
         <h1 style={{ color: '#ff9800', margin: 0, fontSize: '28px' }}>AI-enabled Test Automation</h1>
       </div>
 
