@@ -337,8 +337,8 @@ const ChatView = ({
 				display: isHidden ? "none" : "flex",
 				flexDirection: "column",
 				overflow: "hidden",
-				backgroundColor: "#f3e5f5",
-				color: "#4a148c",
+				backgroundColor: "#1e1e1e",
+				color: "#ffffff",
 			}}>
 			{task && (
 				<TaskHeader
@@ -416,7 +416,7 @@ const ChatView = ({
 						style={{
 							position: "absolute",
 							inset: "10px 15px",
-							border: "1px solid #7b1fa2",
+							border: "1px solid #ff9800",
 							borderRadius: 2,
 							pointerEvents: "none",
 						}}
@@ -440,8 +440,8 @@ const ChatView = ({
 					style={{
 						width: "100%",
 						boxSizing: "border-box",
-						backgroundColor: "#ffffff",
-						color: "#4a148c",
+						backgroundColor: "#2d2d2d",
+						color: "#ffffff",
 						borderRadius: 2,
 						fontFamily: "var(--vscode-font-family)",
 						fontSize: "var(--vscode-editor-font-size)",
@@ -485,7 +485,7 @@ const ChatView = ({
 						appearance="icon"
 						aria-label="Attach Images"
 						onClick={selectImages}
-						style={{ marginRight: "2px", color: "#7b1fa2" }}>
+						style={{ marginRight: "2px", color: "#ff9800" }}>
 						<span
 							className="codicon codicon-device-camera"
 							style={{ fontSize: 18, marginLeft: -2, marginTop: -1 }}></span>
@@ -495,7 +495,7 @@ const ChatView = ({
 						appearance="icon"
 						aria-label="Send Message"
 						onClick={handleSendMessage}
-						style={{ color: "#7b1fa2" }}>
+						style={{ color: "#ff9800" }}>
 						<span className="codicon codicon-send" style={{ fontSize: 16 }}></span>
 					</VSCodeButton>
 				</div>

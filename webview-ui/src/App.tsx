@@ -79,7 +79,7 @@ const App: React.FC = () => {
 	}
 
 	return (
-		<div style={{ backgroundColor: '#f3e5f5', minHeight: '100vh', color: '#4a148c' }}>
+		<div style={{ height: '100vh', overflow: 'auto', backgroundColor: '#1e1e1e', color: '#ffffff' }}>
 			{showWelcome ? (
 				<WelcomeView apiConfiguration={apiConfiguration} setApiConfiguration={setApiConfiguration} />
 			) : (
