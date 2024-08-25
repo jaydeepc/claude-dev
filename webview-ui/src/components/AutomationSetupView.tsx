@@ -59,9 +59,66 @@ const AutomationSetupView: React.FC<AutomationSetupViewProps> = ({ onStartAutoma
   };
 
   const handleStartAutomation = () => {
+    const prompt = `
+Create a comprehensive, maintainable, reusable, and scalable API automation framework for ${automationType} using ${selectedLanguage}. Follow these steps and requirements:
+
+1. Project Structure:
+   - Create a proper folder structure that promotes modularity and ease of maintenance.
+   - Include separate directories for tests, page objects (if applicable), utilities, configurations, and test data.
+   - Organize tests into separate files for different endpoints, following proper test file naming conventions.
+
+2. Design Principles:
+   - Implement the Page Object Model (POM) or appropriate design pattern for API testing.
+   - Use Object-Oriented Programming (OOP) principles to create reusable components.
+   - Implement proper error handling and logging mechanisms.
+
+3. Framework Features:
+   - Create a robust configuration management system for different environments (e.g., dev, staging, production).
+   - Implement a comprehensive reporting mechanism that generates detailed, interactive HTML reports with the following features:
+     a. A main dashboard page with an overview of test results, including:
+        - Summary statistics (total tests, passed, failed, skipped)
+        - Interactive charts and graphs showing test execution statistics (e.g., pass/fail ratio, execution time)
+        - Trend analysis of test results over time
+     b. Navigation menu to access different sections of the report
+     c. Detailed test results page, accessible from the dashboard, showing:
+        - List of all test cases with their status (passed, failed, skipped)
+        - Ability to expand each test case to view detailed information, including:
+          * Test steps
+          * Request/response details
+          * Assertions and their results
+          * Any error messages or stack traces for failed tests
+     d. Ability to filter and search test results
+     e. Animations for loading and transitions between different report sections
+   - Include support for parallel test execution to improve efficiency.
+   - Implement a mechanism for easy test data management (e.g., using external files or databases).
+
+4. Test Cases:
+   - For the selected endpoints (${selectedEndpoints.join(', ')}), create extensive test suites covering:
+     a. Happy path scenarios
+     b. Negative test cases
+     c. Edge cases
+     d. Security-related test cases (e.g., authentication, authorization)
+   - Aim for a minimum of 10-15 diverse test cases per endpoint to ensure comprehensive coverage.
+   - Ensure each endpoint has its own test file, following proper naming conventions (e.g., test_endpoint_name.py for Python).
+
+5. Best Practices:
+   - Follow coding best practices and style guidelines specific to ${selectedLanguage}.
+   - Include clear and comprehensive comments and documentation.
+   - Implement proper version control practices (e.g., .gitignore file, README.md with setup instructions).
+
+6. Dependencies and Setup:
+   - Create a requirements.txt or equivalent file listing all necessary dependencies.
+   - Include clear instructions for setting up and running the framework.
+
+7. CI/CD Considerations:
+   - Provide guidelines or configurations for integrating the framework into common CI/CD pipelines.
+
+Please generate this framework, ensuring it's robust, easy to maintain, and can be easily extended for future endpoints and test cases. Make sure to organize the tests into separate files for each endpoint and create a comprehensive, interactive HTML report with a dashboard, charts, and detailed test results pages.
+    `;
+
     vscode.postMessage({
       type: 'newTask',
-      text: `Create an API automation framework for ${automationType} using ${selectedLanguage}. Endpoints: ${selectedEndpoints.join(', ')}`
+      text: prompt
     });
     onStartAutomation();
   };
