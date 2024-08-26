@@ -108,6 +108,24 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(
 		vscode.workspace.registerTextDocumentContentProvider("claude-dev-diff", diffContentProvider)
 	)
+
+	// Add a new message handler for getting the folder structure
+	sidebarProvider.setWebviewMessageHandler((message: any) => {
+		if (message.type === 'getFolderStructure') {
+			const workspaceFolders = vscode.workspace.workspaceFolders;
+			if (workspaceFolders && workspaceFolders.length > 0) {
+				const rootPath = workspaceFolders[0].uri.fsPath;
+				vscode.workspace.fs.readDirectory(vscode.Uri.file(rootPath)).then((entries) => {
+					const structure = entries.map(([name, type]) => {
+						return `${type === vscode.FileType.Directory ? '📁' : '📄'} ${name}`;
+					}).join('\n');
+					sidebarProvider.postMessageToWebview({ type: 'folderStructure', structure });
+				});
+			} else {
+				sidebarProvider.postMessageToWebview({ type: 'folderStructure', structure: 'No workspace folder open' });
+			}
+		}
+	});
 }
 
 // This method is called when your extension is deactivated

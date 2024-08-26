@@ -32,6 +32,7 @@ export class ClaudeDevProvider implements vscode.WebviewViewProvider {
 	private view?: vscode.WebviewView | vscode.WebviewPanel
 	private claudeDev?: ClaudeDev
 	private latestAnnouncementId = "aug-17-2024" // update to some unique identifier when we add a new announcement
+	private webviewMessageHandler?: (message: any) => void
 
 	constructor(readonly context: vscode.ExtensionContext, private readonly outputChannel: vscode.OutputChannel) {
 		this.outputChannel.appendLine("ClaudeDevProvider instantiated")
@@ -340,6 +341,11 @@ export class ClaudeDevProvider implements vscode.WebviewViewProvider {
 					case "exportTaskWithId":
 						this.exportTaskWithId(message.text!)
 						break
+					case "getFolderStructure":
+						if (this.webviewMessageHandler) {
+							this.webviewMessageHandler(message);
+						}
+						break
 					// Add more switch case statements here as more webview message commands
 					// are created within the webview context (i.e. inside media/main.js)
 				}
@@ -347,6 +353,11 @@ export class ClaudeDevProvider implements vscode.WebviewViewProvider {
 			null,
 			this.disposables
 		)
+	}
+
+	// New method to set the webview message handler
+	setWebviewMessageHandler(handler: (message: any) => void) {
+		this.webviewMessageHandler = handler;
 	}
 
 	// Task history

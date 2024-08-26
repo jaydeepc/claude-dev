@@ -1,21 +1,60 @@
 import React, { useState, useEffect } from 'react';
-import { VSCodeButton, VSCodeDropdown, VSCodeOption } from '@vscode/webview-ui-toolkit/react';
+import { VSCodeButton, VSCodeDropdown, VSCodeOption, VSCodeTextArea } from '@vscode/webview-ui-toolkit/react';
 import { vscode } from '../utils/vscode';
 
 interface AutomationSetupViewProps {
   onStartAutomation: () => void;
 }
 
+const TabButton: React.FC<{ isActive: boolean; onClick: () => void; children: React.ReactNode }> = ({ isActive, onClick, children }) => (
+  <button
+    onClick={onClick}
+    style={{
+      padding: '10px 20px',
+      border: 'none',
+      background: isActive ? '#ff9800' : '#333',
+      color: isActive ? '#1e1e1e' : '#fff',
+      cursor: 'pointer',
+      borderRadius: '4px 4px 0 0',
+      transition: 'background-color 0.3s',
+    }}
+  >
+    {children}
+  </button>
+);
+
 const AutomationSetupView: React.FC<AutomationSetupViewProps> = ({ onStartAutomation }) => {
+  const [activeTab, setActiveTab] = useState<'create' | 'add'>('create');
   const [automationType, setAutomationType] = useState<string>('');
   const [swaggerFile, setSwaggerFile] = useState<File | null>(null);
   const [endpoints, setEndpoints] = useState<string[]>([]);
   const [selectedEndpoints, setSelectedEndpoints] = useState<string[]>([]);
   const [selectedLanguage, setSelectedLanguage] = useState<string>('');
   const [selectedRunner, setSelectedRunner] = useState<string>('');
+  const [folderStructure, setFolderStructure] = useState<string>('');
+  const [endpointInput, setEndpointInput] = useState<string>('');
+  const [inputMethod, setInputMethod] = useState<'swagger' | 'manual'>('swagger');
 
   useEffect(() => {
     console.log('AutomationSetupView mounted');
+    if (activeTab === 'add') {
+      vscode.postMessage({ type: 'getFolderStructure' });
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
+    const messageHandler = (event: MessageEvent) => {
+      const message = event.data;
+      if (message.type === 'folderStructure') {
+        setFolderStructure(message.structure);
+      }
+    };
+
+    window.addEventListener('message', messageHandler);
+
+    return () => {
+      window.removeEventListener('message', messageHandler);
+    };
   }, []);
 
   const handleAutomationTypeChange = (event: Event | React.FormEvent<HTMLElement>) => {
@@ -57,7 +96,7 @@ const AutomationSetupView: React.FC<AutomationSetupViewProps> = ({ onStartAutoma
   const handleLanguageChange = (event: Event | React.FormEvent<HTMLElement>) => {
     const target = event.target as HTMLSelectElement;
     setSelectedLanguage(target.value);
-    setSelectedRunner(''); // Reset runner when language changes
+    setSelectedRunner('');
   };
 
   const handleRunnerChange = (event: Event | React.FormEvent<HTMLElement>) => {
@@ -79,15 +118,17 @@ const AutomationSetupView: React.FC<AutomationSetupViewProps> = ({ onStartAutoma
   };
 
   const handleStartAutomation = () => {
-    const prompt = `
+    let prompt = '';
+    if (activeTab === 'create') {
+      prompt = `
 Create a comprehensive, maintainable, reusable, and scalable API automation framework for ${automationType} using ${selectedLanguage} with ${selectedRunner} as the test runner. Follow these steps and requirements strictly to ensure consistency and eliminate errors:
 
 1. Project Structure:
    Create the following folder structure:
    /api_automation_framework
    ├── tests/
-   │   ├── test_endpoint1.${selectedLanguage === 'python' ? 'py' : selectedLanguage === 'java' ? 'java' : 'js'}
-   │   └── test_endpoint2.${selectedLanguage === 'python' ? 'py' : selectedLanguage === 'java' ? 'java' : 'js'}
+   │   ├── <test_name_based_on_what_endpoint_is_tested>.${selectedLanguage === 'python' ? 'py' : selectedLanguage === 'java' ? 'java' : 'js'}
+   │   └── <test_name_based_on_what_endpoint_is_tested>.${selectedLanguage === 'python' ? 'py' : selectedLanguage === 'java' ? 'java' : 'js'}
    ├── api_client/
    │   └── client.${selectedLanguage === 'python' ? 'py' : selectedLanguage === 'java' ? 'java' : 'js'}
    ├── utils/
@@ -117,9 +158,11 @@ Create a comprehensive, maintainable, reusable, and scalable API automation fram
    - Use the data/ directory for test data management.
 
 4. Test Cases:
-   - For the selected endpoints (${selectedEndpoints.join(', ')}), create test files in the tests/ directory and make sure to provide suitable name according to the endpoint
-   - Implement at least 10 diverse test cases per endpoint, covering happy paths, negative cases, edge cases, and security-related scenarios.
+   - Create test files ONLY for the following selected endpoints: ${selectedEndpoints.join(', ')}
+   - For each selected endpoint, create a separate test file in the tests/ directory with a suitable name according to the endpoint.
+   - Implement at least 10 diverse test cases for each selected endpoint, covering happy paths, negative cases, edge cases, and security-related scenarios.
    - Use data-driven testing by reading test data from data/test_data.json.
+   - DO NOT create test files or test cases for any endpoints other than the ones explicitly listed above.
 
 5. Best Practices:
    - Follow ${selectedLanguage}-specific coding standards and best practices.
@@ -192,6 +235,31 @@ For JavaScript frameworks, particularly when using Jest:
 
 IMPORTANT: Ensure that all files are created with the correct content, and that there are no placeholder comments or TODOs left in the generated code. The framework should be fully functional and ready to run after following the setup instructions.
     `;
+    } else if (activeTab === 'add') {
+      const endpointDetails = inputMethod === 'swagger' ? selectedEndpoints.join(', ') : endpointInput;
+      prompt = `
+Add new test cases to the existing API automation framework. The new test cases should be for the following endpoint(s): ${endpointDetails}
+
+Existing folder structure:
+${folderStructure}
+
+Follow these steps to add the new test cases:
+
+1. Analyze the existing framework structure and coding patterns.
+2. Create a new test file for each endpoint if it doesn't exist, following the naming conventions used in the framework.
+3. Implement at least 5 diverse test cases per endpoint, covering:
+   - Happy path scenarios
+   - Negative test cases
+   - Edge cases
+   - Security-related scenarios (if applicable)
+4. Ensure the new test cases follow the existing framework's design principles and best practices.
+5. Update any necessary configuration files or test data to support the new test cases.
+6. If needed, extend the API client to support the new endpoint(s).
+7. Update the README.md file to include information about the new endpoint(s) and test cases.
+
+IMPORTANT: Ensure that the new test cases integrate seamlessly with the existing framework and follow all established coding standards and practices. Do not modify or remove any existing test cases unless absolutely necessary.
+    `;
+    }
 
     vscode.postMessage({
       type: 'newTask',
@@ -211,85 +279,156 @@ IMPORTANT: Ensure that all files are created with the correct content, and that 
       borderRadius: '8px',
       boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
     }}>
-        
       <div style={{ marginBottom: '30px' }}>
         <h1 style={{ color: '#ff9800', margin: 0, fontSize: '28px' }}>AI-enabled Test Automation</h1>
       </div>
 
-      <p style={{ marginBottom: '30px', lineHeight: '1.6', fontSize: '16px', color: '#cccccc' }}>
-        Welcome to the next generation of test automation. Our AI-powered tool simplifies the process of creating robust, efficient, and maintainable test frameworks for your API and UI testing needs. Get started by selecting your automation type below.
-      </p>
-
-      <div style={{ marginBottom: '30px' }}>
-        <label htmlFor="automationType" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#ff9800' }}>Select Automation Type:</label>
-        <VSCodeDropdown id="automationType" value={automationType} onChange={handleAutomationTypeChange} style={{ width: '100%' }}>
-          <VSCodeOption value="">Select...</VSCodeOption>
-          <VSCodeOption value="api">API Automation</VSCodeOption>
-          <VSCodeOption value="ui" disabled>UI Automation (Coming Soon)</VSCodeOption>
-        </VSCodeDropdown>
+      <div style={{ display: 'flex', marginBottom: '20px' }}>
+        <TabButton isActive={activeTab === 'create'} onClick={() => setActiveTab('create')}>
+          Create Framework
+        </TabButton>
+        <TabButton isActive={activeTab === 'add'} onClick={() => setActiveTab('add')}>
+          Add Tests
+        </TabButton>
       </div>
 
-      {automationType === 'api' && (
+      <p style={{ marginBottom: '30px', lineHeight: '1.6', fontSize: '16px', color: '#cccccc' }}>
+        {activeTab === 'create'
+          ? 'Welcome to the next generation of test automation. Our AI-powered tool simplifies the process of creating robust, efficient, and maintainable test frameworks for your API and UI testing needs. Get started by selecting your automation type below.'
+          : 'Add new test cases to your existing automation framework. Our AI will help you create comprehensive tests for new endpoints while maintaining consistency with your existing framework.'}
+      </p>
+
+      {activeTab === 'create' && (
         <>
           <div style={{ marginBottom: '30px' }}>
-            <label htmlFor="swaggerUpload" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#ff9800' }}>Upload Swagger File:</label>
-            <input type="file" id="swaggerUpload" onChange={handleFileUpload} accept=".json,.yaml" style={{ display: 'none' }} />
-            <VSCodeButton onClick={() => document.getElementById('swaggerUpload')?.click()} style={{ backgroundColor: '#ff9800', color: '#1e1e1e', width: '100%', padding: '10px' }}>
-              {swaggerFile ? `File uploaded: ${swaggerFile.name}` : 'Upload Swagger File'}
-            </VSCodeButton>
+            <label htmlFor="automationType" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#ff9800' }}>Select Automation Type:</label>
+            <VSCodeDropdown id="automationType" value={automationType} onChange={handleAutomationTypeChange} style={{ width: '100%' }}>
+              <VSCodeOption value="">Select...</VSCodeOption>
+              <VSCodeOption value="api">API Automation</VSCodeOption>
+              <VSCodeOption value="ui" disabled>UI Automation (Coming Soon)</VSCodeOption>
+            </VSCodeDropdown>
           </div>
 
-          {endpoints.length > 0 && (
-            <div style={{ marginBottom: '30px' }}>
-              <p style={{ fontWeight: 'bold', marginBottom: '10px', color: '#ff9800' }}>Select up to 2 endpoints:</p>
-              <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #444', borderRadius: '4px', padding: '10px' }}>
-                {endpoints.map(endpoint => (
-                  <div key={endpoint} style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
-                    <input
-                      type="checkbox"
-                      id={endpoint}
-                      checked={selectedEndpoints.includes(endpoint)}
-                      onChange={() => handleEndpointSelection(endpoint)}
-                      disabled={selectedEndpoints.length >= 2 && !selectedEndpoints.includes(endpoint)}
-                      style={{ marginRight: '10px' }}
-                    />
-                    <label htmlFor={endpoint} style={{ color: '#cccccc' }}>{endpoint}</label>
-                  </div>
-                ))}
+          {automationType === 'api' && (
+            <>
+              <div style={{ marginBottom: '30px' }}>
+                <label htmlFor="swaggerUpload" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#ff9800' }}>Upload Swagger File:</label>
+                <input type="file" id="swaggerUpload" onChange={handleFileUpload} accept=".json,.yaml" style={{ display: 'none' }} />
+                <VSCodeButton onClick={() => document.getElementById('swaggerUpload')?.click()} style={{ backgroundColor: '#ff9800', color: '#1e1e1e', width: '100%', padding: '10px' }}>
+                  {swaggerFile ? `File uploaded: ${swaggerFile.name}` : 'Upload Swagger File'}
+                </VSCodeButton>
               </div>
-            </div>
-          )}
 
-          {selectedEndpoints.length > 0 && (
-            <div style={{ marginBottom: '30px' }}>
-              <label htmlFor="language" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#ff9800' }}>Select Language:</label>
-              <VSCodeDropdown id="language" value={selectedLanguage} onChange={handleLanguageChange} style={{ width: '100%' }}>
-                <VSCodeOption value="">Select...</VSCodeOption>
-                <VSCodeOption value="python">Python</VSCodeOption>
-                <VSCodeOption value="java">Java</VSCodeOption>
-                <VSCodeOption value="javascript">JavaScript (ES6)</VSCodeOption>
-              </VSCodeDropdown>
-            </div>
-          )}
+              {endpoints.length > 0 && (
+                <div style={{ marginBottom: '30px' }}>
+                  <p style={{ fontWeight: 'bold', marginBottom: '10px', color: '#ff9800' }}>Select up to 2 endpoints:</p>
+                  <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #444', borderRadius: '4px', padding: '10px' }}>
+                    {endpoints.map(endpoint => (
+                      <div key={endpoint} style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
+                        <input
+                          type="checkbox"
+                          id={endpoint}
+                          checked={selectedEndpoints.includes(endpoint)}
+                          onChange={() => handleEndpointSelection(endpoint)}
+                          disabled={selectedEndpoints.length >= 2 && !selectedEndpoints.includes(endpoint)}
+                          style={{ marginRight: '10px' }}
+                        />
+                        <label htmlFor={endpoint} style={{ color: '#cccccc' }}>{endpoint}</label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
-          {selectedLanguage && (
-            <div style={{ marginBottom: '30px' }}>
-              <label htmlFor="runner" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#ff9800' }}>Select Test Runner:</label>
-              <VSCodeDropdown id="runner" value={selectedRunner} onChange={handleRunnerChange} style={{ width: '100%' }}>
-                <VSCodeOption value="">Select...</VSCodeOption>
-                {getRunnerOptions(selectedLanguage).map(runner => (
-                  <VSCodeOption key={runner} value={runner}>{runner}</VSCodeOption>
-                ))}
-              </VSCodeDropdown>
-            </div>
-          )}
+              {selectedEndpoints.length > 0 && (
+                <div style={{ marginBottom: '30px' }}>
+                  <label htmlFor="language" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#ff9800' }}>Select Language:</label>
+                  <VSCodeDropdown id="language" value={selectedLanguage} onChange={handleLanguageChange} style={{ width: '100%' }}>
+                    <VSCodeOption value="">Select...</VSCodeOption>
+                    <VSCodeOption value="python">Python</VSCodeOption>
+                    <VSCodeOption value="java">Java</VSCodeOption>
+                    <VSCodeOption value="javascript">JavaScript (ES6)</VSCodeOption>
+                  </VSCodeDropdown>
+                </div>
+              )}
 
-          {selectedRunner && (
-            <VSCodeButton onClick={handleStartAutomation} style={{ backgroundColor: '#ff9800', color: '#1e1e1e', width: '100%', padding: '10px', fontSize: '16px' }}>
-              Generate Automation Framework
-            </VSCodeButton>
+              {selectedLanguage && (
+                <div style={{ marginBottom: '30px' }}>
+                  <label htmlFor="runner" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#ff9800' }}>Select Test Runner:</label>
+                  <VSCodeDropdown id="runner" value={selectedRunner} onChange={handleRunnerChange} style={{ width: '100%' }}>
+                    <VSCodeOption value="">Select...</VSCodeOption>
+                    {getRunnerOptions(selectedLanguage).map(runner => (
+                      <VSCodeOption key={runner} value={runner}>{runner}</VSCodeOption>
+                    ))}
+                  </VSCodeDropdown>
+                </div>
+              )}
+            </>
           )}
         </>
+      )}
+
+      {activeTab === 'add' && (
+        <>
+          <div style={{ marginBottom: '30px' }}>
+            <h2 style={{ color: '#ff9800', fontSize: '20px' }}>Existing Folder Structure:</h2>
+            <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', backgroundColor: '#2d2d2d', padding: '10px', borderRadius: '4px' }}>
+              {folderStructure}
+            </pre>
+          </div>
+          <div style={{ marginBottom: '30px' }}>
+            <label htmlFor="inputMethod" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#ff9800' }}>Select Input Method:</label>
+            <VSCodeDropdown id="inputMethod" value={inputMethod} onChange={(e) => setInputMethod((e.target as HTMLSelectElement).value as 'swagger' | 'manual')} style={{ width: '100%' }}>
+              <VSCodeOption value="swagger">Upload Swagger File</VSCodeOption>
+              <VSCodeOption value="manual">Manually Enter Endpoint</VSCodeOption>
+            </VSCodeDropdown>
+          </div>
+          {inputMethod === 'swagger' ? (
+            <div style={{ marginBottom: '30px' }}>
+              <label htmlFor="swaggerUpload" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#ff9800' }}>Upload Swagger File:</label>
+              <input type="file" id="swaggerUpload" onChange={handleFileUpload} accept=".json,.yaml" style={{ display: 'none' }} />
+              <VSCodeButton onClick={() => document.getElementById('swaggerUpload')?.click()} style={{ backgroundColor: '#ff9800', color: '#1e1e1e', width: '100%', padding: '10px' }}>
+                {swaggerFile ? `File uploaded: ${swaggerFile.name}` : 'Upload Swagger File'}
+              </VSCodeButton>
+              {endpoints.length > 0 && (
+                <div style={{ marginTop: '20px' }}>
+                  <p style={{ fontWeight: 'bold', marginBottom: '10px', color: '#ff9800' }}>Select endpoints to add tests for:</p>
+                  <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #444', borderRadius: '4px', padding: '10px' }}>
+                    {endpoints.map(endpoint => (
+                      <div key={endpoint} style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
+                        <input
+                          type="checkbox"
+                          id={endpoint}
+                          checked={selectedEndpoints.includes(endpoint)}
+                          onChange={() => handleEndpointSelection(endpoint)}
+                          style={{ marginRight: '10px' }}
+                        />
+                        <label htmlFor={endpoint} style={{ color: '#cccccc' }}>{endpoint}</label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div style={{ marginBottom: '30px' }}>
+              <label htmlFor="endpointInput" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#ff9800' }}>Enter Endpoint Details:</label>
+              <VSCodeTextArea
+                id="endpointInput"
+                value={endpointInput}
+                onChange={(e) => setEndpointInput((e.target as HTMLTextAreaElement).value)}
+                placeholder="Enter the endpoint details (e.g., GET /api/users)"
+                style={{ width: '100%', minHeight: '100px' }}
+              />
+            </div>
+          )}
+        </>
+      )}
+
+      {((activeTab === 'create' && selectedRunner) || (activeTab === 'add' && ((inputMethod === 'swagger' && selectedEndpoints.length > 0) || (inputMethod === 'manual' && endpointInput)))) && (
+        <VSCodeButton onClick={handleStartAutomation} style={{ backgroundColor: '#ff9800', color: '#1e1e1e', width: '100%', padding: '10px', fontSize: '16px' }}>
+          {activeTab === 'create' ? 'Generate Automation Framework' : 'Add Tests to Existing Framework'}
+        </VSCodeButton>
       )}
     </div>
   );

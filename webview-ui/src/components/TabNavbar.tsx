@@ -6,6 +6,7 @@ const BUTTON_MARGIN_RIGHT = "3px"
 const LAST_BUTTON_MARGIN_RIGHT = "13px"
 
 type TabNavbarProps = {
+	onTabChange: (tab: string) => void
 	onPlusClick: () => void
 	onHistoryClick: () => void
 	onSettingsClick: () => void
@@ -26,15 +27,15 @@ const Tooltip: React.FC<TooltipProps> = ({ text, isVisible, position, align = "c
 	}
 
 	if (align === "right") {
-		leftPosition = position.x - 10 // Adjust this value as needed
+		leftPosition = position.x - 10
 		triangleStyle = {
-			right: "10px", // Adjust this value to match the tooltip's right padding
+			right: "10px",
 			marginLeft: "0",
 		}
 	} else if (align === "left") {
-		leftPosition = position.x + 10 // Adjust this value as needed
+		leftPosition = position.x + 10
 		triangleStyle = {
-			left: "10px", // Adjust this value to match the tooltip's left padding
+			left: "10px",
 			marginLeft: "0",
 		}
 	}
@@ -45,7 +46,7 @@ const Tooltip: React.FC<TooltipProps> = ({ text, isVisible, position, align = "c
 				position: "fixed",
 				top: `${position.y}px`,
 				left: align === "center" ? leftPosition + "px" : "auto",
-				right: align === "right" ? "10px" : "auto", // Ensure 10px from screen edge
+				right: align === "right" ? "10px" : "auto",
 				transform: align === "center" ? "translateX(-50%)" : "none",
 				opacity: isVisible ? 1 : 0,
 				visibility: isVisible ? "visible" : "hidden",
@@ -87,7 +88,7 @@ const Tooltip: React.FC<TooltipProps> = ({ text, isVisible, position, align = "c
 	)
 }
 
-const TabNavbar = ({ onPlusClick, onHistoryClick, onSettingsClick }: TabNavbarProps) => {
+const TabNavbar = ({ onTabChange, onPlusClick, onHistoryClick, onSettingsClick }: TabNavbarProps) => {
 	const [tooltip, setTooltip] = useState<TooltipProps>({
 		text: "",
 		isVisible: false,
@@ -128,36 +129,58 @@ const TabNavbar = ({ onPlusClick, onHistoryClick, onSettingsClick }: TabNavbarPr
 					left: 0,
 					height: TAB_NAVBAR_HEIGHT,
 					display: "flex",
-					justifyContent: "flex-end",
+					justifyContent: "space-between",
 					alignItems: "center",
 				}}>
-				<VSCodeButton
-					appearance="icon"
-					onClick={onPlusClick}
-					style={buttonStyle}
-					onMouseEnter={(e) => showTooltip("New Chat", e, "center")}
-					onMouseLeave={hideTooltip}
-					onMouseMove={(e) => showTooltip("New Chat", e, "center")}>
-					<span className="codicon codicon-add"></span>
-				</VSCodeButton>
-				<VSCodeButton
-					appearance="icon"
-					onClick={onHistoryClick}
-					style={buttonStyle}
-					onMouseEnter={(e) => showTooltip("History", e, "center")}
-					onMouseLeave={hideTooltip}
-					onMouseMove={(e) => showTooltip("History", e, "center")}>
-					<span className="codicon codicon-history"></span>
-				</VSCodeButton>
-				<VSCodeButton
-					appearance="icon"
-					onClick={onSettingsClick}
-					style={lastButtonStyle}
-					onMouseEnter={(e) => showTooltip("Settings", e, "right")}
-					onMouseLeave={hideTooltip}
-					onMouseMove={(e) => showTooltip("Settings", e, "right")}>
-					<span className="codicon codicon-settings-gear"></span>
-				</VSCodeButton>
+				<div>
+					<VSCodeButton
+						appearance="secondary"
+						onClick={() => onTabChange("create")}
+						style={buttonStyle}
+						onMouseEnter={(e) => showTooltip("Create Framework", e, "left")}
+						onMouseLeave={hideTooltip}
+						onMouseMove={(e) => showTooltip("Create Framework", e, "left")}>
+						Create Framework
+					</VSCodeButton>
+					<VSCodeButton
+						appearance="secondary"
+						onClick={() => onTabChange("add")}
+						style={buttonStyle}
+						onMouseEnter={(e) => showTooltip("Add Tests", e, "left")}
+						onMouseLeave={hideTooltip}
+						onMouseMove={(e) => showTooltip("Add Tests", e, "left")}>
+						Add Tests
+					</VSCodeButton>
+				</div>
+				<div>
+					<VSCodeButton
+						appearance="icon"
+						onClick={onPlusClick}
+						style={buttonStyle}
+						onMouseEnter={(e) => showTooltip("New Chat", e, "center")}
+						onMouseLeave={hideTooltip}
+						onMouseMove={(e) => showTooltip("New Chat", e, "center")}>
+						<span className="codicon codicon-add"></span>
+					</VSCodeButton>
+					<VSCodeButton
+						appearance="icon"
+						onClick={onHistoryClick}
+						style={buttonStyle}
+						onMouseEnter={(e) => showTooltip("History", e, "center")}
+						onMouseLeave={hideTooltip}
+						onMouseMove={(e) => showTooltip("History", e, "center")}>
+						<span className="codicon codicon-history"></span>
+					</VSCodeButton>
+					<VSCodeButton
+						appearance="icon"
+						onClick={onSettingsClick}
+						style={lastButtonStyle}
+						onMouseEnter={(e) => showTooltip("Settings", e, "right")}
+						onMouseLeave={hideTooltip}
+						onMouseMove={(e) => showTooltip("Settings", e, "right")}>
+						<span className="codicon codicon-settings-gear"></span>
+					</VSCodeButton>
+				</div>
 			</div>
 			<Tooltip {...tooltip} />
 		</>
