@@ -12,7 +12,7 @@ const TabButton: React.FC<{ isActive: boolean; onClick: () => void; children: Re
     style={{
       padding: '10px 20px',
       border: 'none',
-      background: isActive ? '#4CAF50' : '#333',
+      background: isActive ? '#0be9f7' : '#333',
       color: isActive ? '#000' : '#fff',
       cursor: 'pointer',
       borderRadius: '4px 4px 0 0',
@@ -280,8 +280,9 @@ IMPORTANT: Ensure that the new test cases integrate seamlessly with the existing
       boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
     }}>
       <div style={{ marginBottom: '30px', textAlign: 'center' }}>
-        <h1 style={{ color: '#4CAF50', margin: 0, fontSize: '32px', fontWeight: 'bold' }}>PhantomQA</h1>
-        <p style={{ color: '#81C784', fontSize: '18px', marginTop: '10px' }}>AI-Driven Test Automation at Your Fingertips</p>
+        <img src="https://file+.vscode-resource.vscode-cdn.net/Users/codecrackjd/Documents/work/opensource/claude-dev/webview-ui/public/logo.png" alt="PhantomQA Logo" style={{ width: '100px', height: 'auto', marginBottom: '10px' }} />
+        <h1 style={{ color: '#0be9f7', margin: 0, fontSize: '32px', fontWeight: 'bold' }}>PhantomQA</h1>
+        <p style={{ color: '#81e9fb', fontSize: '18px', marginTop: '10px' }}>AI-Driven Test Automation at Your Fingertips</p>
       </div>
 
       <div style={{ display: 'flex', marginBottom: '20px' }}>
@@ -293,7 +294,7 @@ IMPORTANT: Ensure that the new test cases integrate seamlessly with the existing
         </TabButton>
       </div>
 
-      <p style={{ marginBottom: '30px', lineHeight: '1.6', fontSize: '16px', color: '#A5D6A7' }}>
+      <p style={{ marginBottom: '30px', lineHeight: '1.6', fontSize: '16px', color: '#a5fbfc' }}>
         {activeTab === 'create'
           ? 'PhantomQA leverages the power of AI to help QAs effortlessly create automated testing frameworks and tests. No more manual setup or extensive coding—PhantomQA uses cutting-edge AI to generate custom, reliable, and scalable automated tests tailored to your application\'s architecture.'
           : 'Enhance your existing automation framework with new test cases. Our AI will help you create comprehensive tests for new endpoints while maintaining consistency with your existing framework.'}
@@ -302,7 +303,7 @@ IMPORTANT: Ensure that the new test cases integrate seamlessly with the existing
       {activeTab === 'create' && (
         <>
           <div style={{ marginBottom: '30px' }}>
-            <label htmlFor="automationType" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#4CAF50' }}>Select Automation Type:</label>
+            <label htmlFor="automationType" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#0be9f7' }}>Select Automation Type:</label>
             <VSCodeDropdown id="automationType" value={automationType} onChange={handleAutomationTypeChange} style={{ width: '100%' }}>
               <VSCodeOption value="">Select...</VSCodeOption>
               <VSCodeOption value="api">API Automation</VSCodeOption>
@@ -313,17 +314,17 @@ IMPORTANT: Ensure that the new test cases integrate seamlessly with the existing
           {automationType === 'api' && (
             <>
               <div style={{ marginBottom: '30px' }}>
-                <label htmlFor="swaggerUpload" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#4CAF50' }}>Upload Swagger File:</label>
+                <label htmlFor="swaggerUpload" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#0be9f7' }}>Upload Swagger File:</label>
                 <input type="file" id="swaggerUpload" onChange={handleFileUpload} accept=".json,.yaml" style={{ display: 'none' }} />
-                <VSCodeButton onClick={() => document.getElementById('swaggerUpload')?.click()} style={{ backgroundColor: '#4CAF50', color: '#000', width: '100%', padding: '10px' }}>
+                <VSCodeButton onClick={() => document.getElementById('swaggerUpload')?.click()} style={{ backgroundColor: '#0be9f7', color: '#000', width: '100%', padding: '10px' }}>
                   {swaggerFile ? `File uploaded: ${swaggerFile.name}` : 'Upload Swagger File'}
                 </VSCodeButton>
               </div>
 
               {endpoints.length > 0 && (
                 <div style={{ marginBottom: '30px' }}>
-                  <p style={{ fontWeight: 'bold', marginBottom: '10px', color: '#4CAF50' }}>Select up to 2 endpoints:</p>
-                  <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #4CAF50', borderRadius: '4px', padding: '10px' }}>
+                  <p style={{ fontWeight: 'bold', marginBottom: '10px', color: '#0be9f7' }}>Select up to 2 endpoints:</p>
+                  <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #0be9f7', borderRadius: '4px', padding: '10px' }}>
                     {endpoints.map(endpoint => (
                       <div key={endpoint} style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
                         <input
@@ -334,7 +335,7 @@ IMPORTANT: Ensure that the new test cases integrate seamlessly with the existing
                           disabled={selectedEndpoints.length >= 2 && !selectedEndpoints.includes(endpoint)}
                           style={{ marginRight: '10px' }}
                         />
-                        <label htmlFor={endpoint} style={{ color: '#A5D6A7' }}>{endpoint}</label>
+                        <label htmlFor={endpoint} style={{ color: '#a5fbfc' }}>{endpoint}</label>
                       </div>
                     ))}
                   </div>
@@ -343,7 +344,7 @@ IMPORTANT: Ensure that the new test cases integrate seamlessly with the existing
 
               {selectedEndpoints.length > 0 && (
                 <div style={{ marginBottom: '30px' }}>
-                  <label htmlFor="language" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#4CAF50' }}>Select Language:</label>
+                  <label htmlFor="language" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#0be9f7' }}>Select Language:</label>
                   <VSCodeDropdown id="language" value={selectedLanguage} onChange={handleLanguageChange} style={{ width: '100%' }}>
                     <VSCodeOption value="">Select...</VSCodeOption>
                     <VSCodeOption value="python">Python</VSCodeOption>
@@ -355,7 +356,7 @@ IMPORTANT: Ensure that the new test cases integrate seamlessly with the existing
 
               {selectedLanguage && (
                 <div style={{ marginBottom: '30px' }}>
-                  <label htmlFor="runner" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#4CAF50' }}>Select Test Runner:</label>
+                  <label htmlFor="runner" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#0be9f7' }}>Select Test Runner:</label>
                   <VSCodeDropdown id="runner" value={selectedRunner} onChange={handleRunnerChange} style={{ width: '100%' }}>
                     <VSCodeOption value="">Select...</VSCodeOption>
                     {getRunnerOptions(selectedLanguage).map(runner => (
@@ -372,13 +373,13 @@ IMPORTANT: Ensure that the new test cases integrate seamlessly with the existing
       {activeTab === 'add' && (
         <>
           <div style={{ marginBottom: '30px' }}>
-            <h2 style={{ color: '#4CAF50', fontSize: '20px' }}>Existing Folder Structure:</h2>
-            <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', backgroundColor: '#1E1E1E', padding: '10px', borderRadius: '4px', color: '#A5D6A7' }}>
+            <h2 style={{ color: '#0be9f7', fontSize: '20px' }}>Existing Folder Structure:</h2>
+            <pre style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-all', backgroundColor: '#1E1E1E', padding: '10px', borderRadius: '4px', color: '#a5fbfc' }}>
               {folderStructure}
             </pre>
           </div>
           <div style={{ marginBottom: '30px' }}>
-            <label htmlFor="inputMethod" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#4CAF50' }}>Select Input Method:</label>
+            <label htmlFor="inputMethod" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#0be9f7' }}>Select Input Method:</label>
             <VSCodeDropdown id="inputMethod" value={inputMethod} onChange={(e) => setInputMethod((e.target as HTMLSelectElement).value as 'swagger' | 'manual')} style={{ width: '100%' }}>
               <VSCodeOption value="swagger">Upload Swagger File</VSCodeOption>
               <VSCodeOption value="manual">Manually Enter Endpoint</VSCodeOption>
@@ -386,15 +387,15 @@ IMPORTANT: Ensure that the new test cases integrate seamlessly with the existing
           </div>
           {inputMethod === 'swagger' ? (
             <div style={{ marginBottom: '30px' }}>
-              <label htmlFor="swaggerUpload" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#4CAF50' }}>Upload Swagger File:</label>
+              <label htmlFor="swaggerUpload" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#0be9f7' }}>Upload Swagger File:</label>
               <input type="file" id="swaggerUpload" onChange={handleFileUpload} accept=".json,.yaml" style={{ display: 'none' }} />
-              <VSCodeButton onClick={() => document.getElementById('swaggerUpload')?.click()} style={{ backgroundColor: '#4CAF50', color: '#000', width: '100%', padding: '10px' }}>
+              <VSCodeButton onClick={() => document.getElementById('swaggerUpload')?.click()} style={{ backgroundColor: '#0be9f7', color: '#000', width: '100%', padding: '10px' }}>
                 {swaggerFile ? `File uploaded: ${swaggerFile.name}` : 'Upload Swagger File'}
               </VSCodeButton>
               {endpoints.length > 0 && (
                 <div style={{ marginTop: '20px' }}>
-                  <p style={{ fontWeight: 'bold', marginBottom: '10px', color: '#4CAF50' }}>Select endpoints to add tests for:</p>
-                  <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #4CAF50', borderRadius: '4px', padding: '10px' }}>
+                  <p style={{ fontWeight: 'bold', marginBottom: '10px', color: '#0be9f7' }}>Select endpoints to add tests for:</p>
+                  <div style={{ maxHeight: '200px', overflowY: 'auto', border: '1px solid #0be9f7', borderRadius: '4px', padding: '10px' }}>
                     {endpoints.map(endpoint => (
                       <div key={endpoint} style={{ display: 'flex', alignItems: 'center', marginBottom: '5px' }}>
                         <input
@@ -404,7 +405,7 @@ IMPORTANT: Ensure that the new test cases integrate seamlessly with the existing
                           onChange={() => handleEndpointSelection(endpoint)}
                           style={{ marginRight: '10px' }}
                         />
-                        <label htmlFor={endpoint} style={{ color: '#A5D6A7' }}>{endpoint}</label>
+                        <label htmlFor={endpoint} style={{ color: '#a5fbfc' }}>{endpoint}</label>
                       </div>
                     ))}
                   </div>
@@ -413,7 +414,7 @@ IMPORTANT: Ensure that the new test cases integrate seamlessly with the existing
             </div>
           ) : (
             <div style={{ marginBottom: '30px' }}>
-              <label htmlFor="endpointInput" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#4CAF50' }}>Enter Endpoint Details:</label>
+              <label htmlFor="endpointInput" style={{ display: 'block', marginBottom: '10px', fontWeight: 'bold', color: '#0be9f7' }}>Enter Endpoint Details:</label>
               <VSCodeTextArea
                 id="endpointInput"
                 value={endpointInput}
@@ -427,7 +428,7 @@ IMPORTANT: Ensure that the new test cases integrate seamlessly with the existing
       )}
 
       {((activeTab === 'create' && selectedRunner) || (activeTab === 'add' && ((inputMethod === 'swagger' && selectedEndpoints.length > 0) || (inputMethod === 'manual' && endpointInput)))) && (
-        <VSCodeButton onClick={handleStartAutomation} style={{ backgroundColor: '#4CAF50', color: '#000', width: '100%', padding: '10px', fontSize: '16px' }}>
+        <VSCodeButton onClick={handleStartAutomation} style={{ backgroundColor: '#0be9f7', color: '#000', width: '100%', padding: '10px', fontSize: '16px' }}>
           {activeTab === 'create' ? 'Generate Automation Framework' : 'Add Tests to Existing Framework'}
         </VSCodeButton>
       )}

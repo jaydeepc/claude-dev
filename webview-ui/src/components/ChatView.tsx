@@ -387,7 +387,7 @@ const ChatView = ({
 						style={{
 							flex: secondaryButtonText ? 1 : 2,
 							marginRight: secondaryButtonText ? "6px" : "0",
-							backgroundColor: "#ff9800",
+							backgroundColor: "#0be9f7",
 							color: "#ffffff",
 						}}
 						onClick={handlePrimaryButtonClick}>
@@ -398,7 +398,7 @@ const ChatView = ({
 					<VSCodeButton
 						appearance="secondary"
 						disabled={!enableButtons}
-						style={{ flex: 1, marginLeft: "6px", borderColor: "#ff9800", color: "#ff9800" }}
+						style={{ flex: 1, marginLeft: "6px", borderColor: "#0be9f7", color: "#0be9f7" }}
 						onClick={handleSecondaryButtonClick}>
 						{secondaryButtonText}
 					</VSCodeButton>
@@ -416,7 +416,7 @@ const ChatView = ({
 						style={{
 							position: "absolute",
 							inset: "10px 15px",
-							border: "1px solid #ff9800",
+							border: "1px solid #0be9f7",
 							borderRadius: 2,
 							pointerEvents: "none",
 						}}
@@ -485,7 +485,7 @@ const ChatView = ({
 						appearance="icon"
 						aria-label="Attach Images"
 						onClick={selectImages}
-						style={{ marginRight: "2px", color: "#ff9800" }}>
+						style={{ marginRight: "2px", color: "#0be9f7" }}>
 						<span
 							className="codicon codicon-device-camera"
 							style={{ fontSize: 18, marginLeft: -2, marginTop: -1 }}></span>
@@ -495,7 +495,7 @@ const ChatView = ({
 						appearance="icon"
 						aria-label="Send Message"
 						onClick={handleSendMessage}
-						style={{ color: "#ff9800" }}>
+						style={{ color: "#0be9f7" }}>
 						<span className="codicon codicon-send" style={{ fontSize: 16 }}></span>
 					</VSCodeButton>
 				</div>

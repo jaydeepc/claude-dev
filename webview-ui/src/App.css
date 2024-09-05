@@ -25,7 +25,7 @@
 }
 
 .App-link {
-	color: #61dafb;
+	color: #0be9f7;
 }
 
 @keyframes App-logo-spin {
@@ -35,4 +35,33 @@
 	to {
 		transform: rotate(360deg);
 	}
+}
+
+/* New styles using the #0be9f7 color */
+a {
+	color: #0be9f7;
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+button {
+	background-color: #0be9f7;
+	color: #282c34;
+	border: none;
+	padding: 10px 20px;
+	border-radius: 5px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+}
+
+button:hover {
+	background-color: #09c6d1;
+}
+
+::selection {
+	background-color: #0be9f7;
+	color: #282c34;
 }
