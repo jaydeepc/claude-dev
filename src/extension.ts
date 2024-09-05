@@ -21,10 +21,10 @@ export function activate(context: vscode.ExtensionContext) {
 	// This line of code will only be executed once when your extension is activated
 	//console.log('Congratulations, your extension "claude-dev" is now active!')
 
-	outputChannel = vscode.window.createOutputChannel("Claude Dev")
+	outputChannel = vscode.window.createOutputChannel("Phantom QA")
 	context.subscriptions.push(outputChannel)
 
-	outputChannel.appendLine("Claude Dev extension activated")
+	outputChannel.appendLine("Phantom QA extension activated")
 
 	// The command has been defined in the package.json file
 	// Now provide the implementation of the command with registerCommand
@@ -54,14 +54,14 @@ export function activate(context: vscode.ExtensionContext) {
 	)
 
 	const openClaudeDevInNewTab = () => {
-		outputChannel.appendLine("Opening Claude Dev in new tab")
+		outputChannel.appendLine("Opening Phantom QA in new tab")
 		// (this example uses webviewProvider activation event which is necessary to deserialize cached webview, but since we use retainContextWhenHidden, we don't need to use that event)
 		// https://github.com/microsoft/vscode-extension-samples/blob/main/webview-sample/src/extension.ts
 		const tabProvider = new ClaudeDevProvider(context, outputChannel)
 		//const column = vscode.window.activeTextEditor ? vscode.window.activeTextEditor.viewColumn : undefined
 		const lastCol = Math.max(...vscode.window.visibleTextEditors.map((editor) => editor.viewColumn || 0))
 		const targetCol = Math.max(lastCol + 1, 1)
-		const panel = vscode.window.createWebviewPanel(ClaudeDevProvider.tabPanelId, "Claude Dev", targetCol, {
+		const panel = vscode.window.createWebviewPanel(ClaudeDevProvider.tabPanelId, "Phantom QA", targetCol, {
 			enableScripts: true,
 			retainContextWhenHidden: true,
 			localResourceRoots: [context.extensionUri],
@@ -123,7 +123,7 @@ export function activate(context: vscode.ExtensionContext) {
 				});
 			} else {
 				sidebarProvider.postMessageToWebview({ type: 'folderStructure', structure: 'No workspace folder open' });
-			}
+``			}
 		}
 	});
 }

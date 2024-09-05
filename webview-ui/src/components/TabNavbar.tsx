@@ -119,6 +119,10 @@ const TabNavbar = ({ onTabChange, onPlusClick, onHistoryClick, onSettingsClick }
 		marginRight: LAST_BUTTON_MARGIN_RIGHT,
 	}
 
+	const iconStyle = {
+		color: "var(--vscode-symbolIcon-colorForeground)", // This will use the theme's green color
+	}
+
 	return (
 		<>
 			<div
@@ -132,7 +136,8 @@ const TabNavbar = ({ onTabChange, onPlusClick, onHistoryClick, onSettingsClick }
 					justifyContent: "space-between",
 					alignItems: "center",
 				}}>
-				<div>
+				<div style={{ display: "flex", alignItems: "center" }}>
+					<div style={{ marginLeft: "10px", marginRight: "20px", fontWeight: "bold" }}>Phantom QA</div>
 					<VSCodeButton
 						appearance="secondary"
 						onClick={() => onTabChange("create")}
@@ -160,7 +165,7 @@ const TabNavbar = ({ onTabChange, onPlusClick, onHistoryClick, onSettingsClick }
 						onMouseEnter={(e) => showTooltip("New Chat", e, "center")}
 						onMouseLeave={hideTooltip}
 						onMouseMove={(e) => showTooltip("New Chat", e, "center")}>
-						<span className="codicon codicon-add"></span>
+						<span className="codicon codicon-add" style={iconStyle}></span>
 					</VSCodeButton>
 					<VSCodeButton
 						appearance="icon"
@@ -169,7 +174,7 @@ const TabNavbar = ({ onTabChange, onPlusClick, onHistoryClick, onSettingsClick }
 						onMouseEnter={(e) => showTooltip("History", e, "center")}
 						onMouseLeave={hideTooltip}
 						onMouseMove={(e) => showTooltip("History", e, "center")}>
-						<span className="codicon codicon-history"></span>
+						<span className="codicon codicon-history" style={iconStyle}></span>
 					</VSCodeButton>
 					<VSCodeButton
 						appearance="icon"
@@ -178,7 +183,7 @@ const TabNavbar = ({ onTabChange, onPlusClick, onHistoryClick, onSettingsClick }
 						onMouseEnter={(e) => showTooltip("Settings", e, "right")}
 						onMouseLeave={hideTooltip}
 						onMouseMove={(e) => showTooltip("Settings", e, "right")}>
-						<span className="codicon codicon-settings-gear"></span>
+						<span className="codicon codicon-settings-gear" style={iconStyle}></span>
 					</VSCodeButton>
 				</div>
 			</div>
