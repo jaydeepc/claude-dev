@@ -5,21 +5,22 @@ import { ClaudeMessage, ExtensionMessage } from "../../src/shared/ExtensionMessa
 import "./App.css"
 import { normalizeApiConfiguration } from "./components/ApiOptions"
 import ChatView from "./components/ChatView"
-import SettingsView from "./components/SettingsView"
 import WelcomeView from "./components/WelcomeView"
 import { vscode } from "./utils/vscode"
 import AutomationSetupView from "./components/AutomationSetupView"
 
 const App: React.FC = () => {
 	const [didHydrateState, setDidHydrateState] = useState(false)
-	const [showSettings, setShowSettings] = useState(false)
 	const [showWelcome, setShowWelcome] = useState<boolean>(false)
 	const [showAutomationSetup, setShowAutomationSetup] = useState<boolean>(true)
 	const [showChatView, setShowChatView] = useState<boolean>(false)
 	const [version, setVersion] = useState<string>("")
-	const [apiConfiguration, setApiConfiguration] = useState<ApiConfiguration | undefined>(undefined)
-	const [maxRequestsPerTask, setMaxRequestsPerTask] = useState<string>("")
-	const [customInstructions, setCustomInstructions] = useState<string>("")
+	const [apiConfiguration, setApiConfiguration] = useState<ApiConfiguration>({
+		apiProvider: "anthropic",
+		apiKey: process.env.REACT_APP_ANTHROPIC_API_KEY || "",
+		apiModelId: "claude-3-5-sonnet-20240620",
+		usePromptCache: true
+	})
 	const [vscodeThemeName, setVscodeThemeName] = useState<string | undefined>(undefined)
 	const [claudeMessages, setClaudeMessages] = useState<ClaudeMessage[]>([])
 
@@ -32,29 +33,15 @@ const App: React.FC = () => {
 		switch (message.type) {
 			case "state":
 				setVersion(message.state!.version)
-				const hasKey =
-					message.state!.apiConfiguration?.apiKey !== undefined ||
-					message.state!.apiConfiguration?.openRouterApiKey !== undefined ||
-					message.state!.apiConfiguration?.awsAccessKey !== undefined
+				const hasKey = true // Always consider the key as set
 				setShowWelcome(!hasKey)
-				setApiConfiguration(message.state!.apiConfiguration)
-				setMaxRequestsPerTask(
-					message.state!.maxRequestsPerTask !== undefined ? message.state!.maxRequestsPerTask.toString() : ""
-				)
-				setCustomInstructions(message.state!.customInstructions || "")
 				setVscodeThemeName(message.state!.themeName)
 				setClaudeMessages(message.state!.claudeMessages)
 				setDidHydrateState(true)
 				break
 			case "action":
 				switch (message.action!) {
-					case "settingsButtonTapped":
-						setShowSettings(true)
-						setShowAutomationSetup(false)
-						setShowChatView(false)
-						break
 					case "chatButtonTapped":
-						setShowSettings(false)
 						setShowAutomationSetup(true)
 						setShowChatView(false)
 						break
@@ -81,21 +68,12 @@ const App: React.FC = () => {
 	return (
 		<div style={{ height: '100vh', overflow: 'auto', backgroundColor: '#1e1e1e', color: '#ffffff' }}>
 			{showWelcome ? (
-				<WelcomeView apiConfiguration={apiConfiguration} setApiConfiguration={setApiConfiguration} />
+				<WelcomeView
+					apiConfiguration={apiConfiguration}
+					setApiConfiguration={setApiConfiguration as React.Dispatch<React.SetStateAction<ApiConfiguration | undefined>>}
+				/>
 			) : (
 				<>
-					{showSettings && (
-						<SettingsView
-							version={version}
-							apiConfiguration={apiConfiguration}
-							setApiConfiguration={setApiConfiguration}
-							maxRequestsPerTask={maxRequestsPerTask}
-							setMaxRequestsPerTask={setMaxRequestsPerTask}
-							customInstructions={customInstructions}
-							setCustomInstructions={setCustomInstructions}
-							onDone={() => setShowSettings(false)}
-						/>
-					)}
 					{showAutomationSetup && (
 						<AutomationSetupView onStartAutomation={handleStartAutomation} />
 					)}

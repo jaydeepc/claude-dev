@@ -54,19 +54,9 @@
         "icon": "$(add)"
       },
       {
-        "command": "claude-dev.historyButtonTapped",
-        "title": "History",
-        "icon": "$(history)"
-      },
-      {
         "command": "claude-dev.popoutButtonTapped",
         "title": "Open in Editor",
         "icon": "$(link-external)"
-      },
-      {
-        "command": "claude-dev.settingsButtonTapped",
-        "title": "Settings",
-        "icon": "$(settings-gear)"
       },
       {
         "command": "claude-dev.openInNewTab",
@@ -82,18 +72,8 @@
           "when": "view == claude-dev.SidebarProvider"
         },
         {
-          "command": "claude-dev.historyButtonTapped",
-          "group": "navigation@2",
-          "when": "view == claude-dev.SidebarProvider"
-        },
-        {
           "command": "claude-dev.popoutButtonTapped",
           "group": "navigation@3",
-          "when": "view == claude-dev.SidebarProvider"
-        },
-        {
-          "command": "claude-dev.settingsButtonTapped",
-          "group": "navigation@4",
           "when": "view == claude-dev.SidebarProvider"
         }
       ]

@@ -111,7 +111,7 @@ const AutomationSetupView: React.FC<AutomationSetupViewProps> = ({ onStartAutoma
       case 'java':
         return ['JUnit', 'TestNG', 'RestAssured'];
       case 'javascript':
-        return ['Jest', 'Mocha', 'Playwright'];
+        return ['Jest', 'Mocha'];
       default:
         return [];
     }

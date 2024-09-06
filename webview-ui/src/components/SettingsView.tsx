@@ -1,4 +1,4 @@
-import { VSCodeButton, VSCodeLink, VSCodeTextArea, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
+import { VSCodeButton, VSCodeTextArea, VSCodeTextField } from "@vscode/webview-ui-toolkit/react"
 import React, { useEffect, useState } from "react"
 import { ApiConfiguration } from "../../../src/shared/api"
 import { validateApiConfiguration, validateMaxRequestsPerTask } from "../utils/validate"
@@ -168,10 +168,6 @@ const SettingsView = ({
 						padding: "10px 8px 15px 0px",
 					}}>
 					<p style={{ wordWrap: "break-word", margin: 0, padding: 0 }}>
-						If you have any questions or feedback, feel free to open an issue at{" "}
-						<VSCodeLink href="https://github.com/saoudrizwan/claude-dev" style={{ display: "inline" }}>
-							https://github.com/saoudrizwan/claude-dev
-						</VSCodeLink>
 					</p>
 					<p style={{ fontStyle: "italic", margin: "10px 0 0 0", padding: 0 }}>v{version}</p>
 				</div>

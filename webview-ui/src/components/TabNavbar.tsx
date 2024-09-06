@@ -3,7 +3,7 @@ import React, { useState } from "react"
 
 export const TAB_NAVBAR_HEIGHT = 24
 const BUTTON_MARGIN_RIGHT = "3px"
-const LAST_BUTTON_MARGIN_RIGHT = "13px"
+// const LAST_BUTTON_MARGIN_RIGHT = "13px"
 
 type TabNavbarProps = {
 	onTabChange: (tab: string) => void
@@ -114,10 +114,10 @@ const TabNavbar = ({ onTabChange, onPlusClick, onHistoryClick, onSettingsClick }
 		marginRight: BUTTON_MARGIN_RIGHT,
 	}
 
-	const lastButtonStyle = {
-		...buttonStyle,
-		marginRight: LAST_BUTTON_MARGIN_RIGHT,
-	}
+	// const lastButtonStyle = {
+	// 	...buttonStyle,
+	// 	marginRight: LAST_BUTTON_MARGIN_RIGHT,
+	// }
 
 	const iconStyle = {
 		color: "var(--vscode-symbolIcon-colorForeground)", // This will use the theme's green color
@@ -167,7 +167,7 @@ const TabNavbar = ({ onTabChange, onPlusClick, onHistoryClick, onSettingsClick }
 						onMouseMove={(e) => showTooltip("New Chat", e, "center")}>
 						<span className="codicon codicon-add" style={iconStyle}></span>
 					</VSCodeButton>
-					<VSCodeButton
+					{/* <VSCodeButton
 						appearance="icon"
 						onClick={onHistoryClick}
 						style={buttonStyle}
@@ -175,8 +175,8 @@ const TabNavbar = ({ onTabChange, onPlusClick, onHistoryClick, onSettingsClick }
 						onMouseLeave={hideTooltip}
 						onMouseMove={(e) => showTooltip("History", e, "center")}>
 						<span className="codicon codicon-history" style={iconStyle}></span>
-					</VSCodeButton>
-					<VSCodeButton
+					</VSCodeButton> */}
+					{/* <VSCodeButton
 						appearance="icon"
 						onClick={onSettingsClick}
 						style={lastButtonStyle}
@@ -184,7 +184,7 @@ const TabNavbar = ({ onTabChange, onPlusClick, onHistoryClick, onSettingsClick }
 						onMouseLeave={hideTooltip}
 						onMouseMove={(e) => showTooltip("Settings", e, "right")}>
 						<span className="codicon codicon-settings-gear" style={iconStyle}></span>
-					</VSCodeButton>
+					</VSCodeButton> */}
 				</div>
 			</div>
 			<Tooltip {...tooltip} />
